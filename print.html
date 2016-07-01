@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html ng-app='app' lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <link rel="stylesheet" href="bower_components/material-design-lite/material.min.css">
+
+    <link href="assets/fonts.googleapis.com/css.css" rel="stylesheet"/>
+    <link href="assets/fonts.googleapis.com/icon.css" rel="stylesheet"/>
+    <link href="assets/style/app.css" rel="stylesheet"/>
+</head>
+<body style="width: 100%;height: 100%;overflow: hidden;margin: 0;padding: 0;">
+<div ng-show="!loginUser" ng-controller="LoginController" class="mdl-grid mdl-grid--no-spacing"
+     style="width: 100%;height: 100%">
+    <div class="mdl-cell mdl-cell--12-col mdl-layout mdl-cell--middle" style="width: 100%">
+        <header style="padding-top: 300px">
+            <div class="mdl-layout__header-row">
+                <div class="mdl-layout-spacer"></div>
+                <div class="mdl-shadow--2dp" style="width: 400px;">
+                    <div class=" mdl-grid mdl-color--primary" style="padding-left: 20px">
+                        <h4 class="mdl-color-text--white ">欢迎使用苹果发票打印系统</h4>
+                    </div>
+                    <h6 class="mdl-color-text--accent" ng-bind="error"
+                        style="white-space:pre;max-width:none;margin-bottom:0;padding-left:16px"></h6>
+                    <div id="login_dialog">
+                        <div class="mdl-grid">
+                            <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col"
+                                 style="margin-bottom: 0;">
+                                <input class="mdl-textfield__input" type="text" ng-model="user.account" placeholder="用户名"/>
+                                <label class="mdl-textfield__label"></label>
+                            </div>
+                            <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col"
+                                 style="margin-bottom: 0;">
+                                <input class="mdl-textfield__input" type="password" ng-model="user.password" placeholder="密码"/>
+                                <label class="mdl-textfield__label"></label>
+                            </div>
+                            <div class="mdl-cell mdl-cell--12-col mdl-grid mdl-grid--no-spacing">
+                                <div style="display:none" id="verify_code">
+                                    <div class="mdl-textfield mdl-js-textfield"
+                                         style="max-width: 55px;padding-top: 4px;">
+                                        <input class="mdl-textfield__input" type="number" style="width:55px"
+                                               ng-model="user.verifyCode" ng-keydown="keyDown($event)" maxlength="4" placeholder="验证码"/>
+                                        <label class="mdl-textfield__label" style="top:10px;height: 41px"></label>
+                                    </div>
+
+                                    <img title="点击更换" ng-click="refreshVerifyCode();" ng-src="{{verifyCodeUrl}}">
+                                </div>
+                                <div class="mdl-layout-spacer"></div>
+                                <button ng-click="login($event)"
+                                        class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect">
+                                    登录
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mdl-grid" style="border-top: 1px solid rgba(0, 0, 0, .12);">
+                            <button ng-click="forgotPassword();" class="mdl-button mdl-js-button mdl-button--primary">
+                                忘记密码
+                            </button>
+                            <div class="mdl-layout-spacer"></div>
+                            <button ng-click="clearError();" onclick="javascript:$('#login_dialog').hide();$('#change_password').show();" class="mdl-button mdl-js-button mdl-button--primary">
+                                修改密码
+                            </button>
+                        </div>
+                    </div>
+                    <div id="change_password" style="display: none">
+                        <div class="mdl-grid">
+                            <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col"
+                                 style="margin-bottom: 0;">
+                                <input class="mdl-textfield__input" type="text" ng-model="user.account" placeholder="用户名"/>
+                                <label class="mdl-textfield__label"></label>
+                            </div>
+                            <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col"
+                                 style="margin-bottom: 0;">
+                                <input class="mdl-textfield__input" type="password" ng-model="user.password" placeholder="原密码"/>
+                                <label class="mdl-textfield__label"></label>
+                            </div>
+                            <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col"
+                                 style="margin-bottom: 0;">
+                                <input class="mdl-textfield__input" type="password" ng-model="user.newPassword" placeholder="新密码"/>
+                                <label class="mdl-textfield__label"></label>
+                            </div>
+                            <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col"
+                                 style="margin-bottom: 0;">
+                                <input class="mdl-textfield__input" type="password" ng-model="user.password1" placeholder="确认新密码"/>
+                                <label class="mdl-textfield__label"></label>
+                            </div>
+                            <div class="mdl-cell mdl-cell--12-col mdl-grid mdl-grid--no-spacing">
+                                <div class="mdl-layout-spacer"></div>
+                                <button ng-click="changePassword()"
+                                        class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect">
+                                    提交
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mdl-grid" style="border-top: 1px solid rgba(0, 0, 0, .12);">
+                            <button ng-click="clearError();" onclick="javascript:$('#change_password').hide();$('#login_dialog').show();" class="mdl-button mdl-js-button mdl-button--primary">
+                                返回登录
+                            </button>
+                            <div class="mdl-layout-spacer"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mdl-layout-spacer"></div>
+            </div>
+        </header>
+    </div>
+</div>
+
+
+<!-- main body -->
+
+
+<div ng-show="loginUser" ng-controller='PrintController' class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <header class="mdl-layout__header" id="header">
+        <div class="mdl-layout__header-row">
+            <div style="padding-right: 40px;padding-top: 5px;">
+                <i class="material-icons" style="color:{{printIconColor}}">print</i>
+                <!--<i class="material-icons" style="color:white">print</i>-->
+                <!--<i class="material-icons" style="color:greenyellow">print</i>-->
+            </div>
+            <div>
+                <span>批量打印页数</span>
+                <span class="mdl-textfield mdl-js-textfield" style="width: 40px;">
+                    <input class="mdl-textfield__input text-center" ng-disabled="processing" ng-model="batchNum"
+                           type="number"/>
+                </span>
+                <span style="padding-left: 5px;" class="mdl-color-text--accent" ng-if="!connected">
+                    未连接到打印机
+                </span>
+                <span style="padding-left: 5px" ng-if="connected">
+                <!--<button class="mdl-button operation-button-color mdl-shadow&#45;&#45;6dp mdl-button&#45;&#45;fab mdl-js-button mdl-js-ripple-effect mdl-button&#45;&#45;mini-fab">-->
+                    <!--<i class="material-icons">print</i></button>-->
+                    <!--<button class="mdl-button operation-button-color mdl-button&#45;&#45;fab mdl-js-button mdl-js-ripple-effect mdl-button&#45;&#45;mini-fab">-->
+                    <!--<i class="material-icons">pause</i></button>-->
+                    <a ng-if="pause||!processing" ng-click="print($event);"
+                       class="mdl-button operation-button-color mdl-button--raised mdl-button--fab mdl-js-button mdl-js-ripple-effect mdl-button--mini-fab">
+                        <i class="material-icons">play_arrow</i>
+                    </a>
+                    <a ng-click="pausePrint($event);" ng-if="processing && !pause"
+                       class="mdl-button operation-button-color mdl-button--raised mdl-button--fab mdl-js-button mdl-js-ripple-effect mdl-button--mini-fab">
+                        <i class="material-icons">pause</i>
+                    </a>
+                    <a ng-click="stop();" style="background-color: {{processing ? '#f46c0e':'darkgrey'}}"
+                       class="mdl-button operation-button-color mdl-button--fab mdl-js-button mdl-js-ripple-effect mdl-button--mini-fab">
+                        <i class="material-icons">stop</i>
+                    </a>
+                </span>
+                <!--<span style="padding: 0 10px">-->
+                <!--<span class="mdl-textfield mdl-js-textfield" style="width: 200px;">-->
+                <!--<input class="mdl-textfield__input text-center" type="text">-->
+                <!--<label class="mdl-textfield__label text-center" style="color:white">输入EMS单号快速定位</label>-->
+                <!--</span>-->
+                <!--</span>-->
+                <!--<button class="mdl-button operation-button-color mdl-button&#45;&#45;fab mdl-js-button mdl-js-ripple-effect mdl-button&#45;&#45;mini-fab">-->
+                <!--<i class="material-icons">swap_vert</i></button>-->
+
+                <!--<button class="mdl-button mdl-button&#45;&#45;icon mdl-js-button mdl-js-ripple-effect">-->
+                <!--<i class="material-icons">print</i></button>-->
+                <!--<button class="mdl-button mdl-button&#45;&#45;icon mdl-js-button mdl-js-ripple-effect">-->
+                <!--<i class="material-icons">pause</i></button>-->
+                <!--<button class="mdl-button mdl-button&#45;&#45;icon mdl-js-button mdl-js-ripple-effect">-->
+                <!--<i class="material-icons">play_arrow</i></button>-->
+                <!--<button class="mdl-button mdl-button&#45;&#45;icon mdl-js-button mdl-js-ripple-effect">-->
+                <!--<i class="material-icons">swap_vert</i></button>-->
+
+
+            </div>
+            <div style="padding-left: 140px"><h4>打印进度&nbsp;&nbsp;&nbsp;&nbsp;{{printPos}} / {{emsList.length}}</h4>
+            </div>
+            <div class="mdl-layout-spacer"></div>
+            <div>{{loginUser.userName}}, 欢迎你!&nbsp;&nbsp;&nbsp;&nbsp;</div>
+            <button ng-click="logout()" class="mdl-button mdl-js-button mdl-button--icon">
+                <i class="material-icons">exit_to_app</i>
+            </button>
+
+        </div>
+    </header>
+
+
+    <main class="mdl-layout__content">
+        <div class="mdl-grid" style="max-width: 1280px">
+
+            <!-- print table -->
+            <div class="mdl-cell mdl-cell--8-col" id="pane-target">
+                <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" style="width:100%;">
+                    <thead>
+                    <tr>
+                        <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EMS单号&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                        <th>&nbsp;&nbsp;&nbsp;&nbsp;订单号&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                        <th>&nbsp;&nbsp;&nbsp;&nbsp;机器号</th>
+                        <th>张数&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                        <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;发票号&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                        <th>&nbsp;&nbsp;&nbsp;&nbsp;状态&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                    </tr>
+                    </thead>
+                </table>
+                <div id="list-wrapper" class="mdl-shadow--2dp" style="max-height: 600px;overflow-y: scroll;">
+                    <div>
+                        <!--<div infinite-scroll='loadMore()' infinite-scroll-distance='1' infinite-scroll-disabled='busy'-->
+                        <!--infinite-scroll-container="'#list-wrapper'">-->
+                        <table class="mdl-data-table mdl-js-data-table" style="width:100%;"
+                               id="print_table">
+                            <tbody id="table_body">
+                            <!--<tr ng-click="showDetail(ems)" bindonce ng-repeat='ems in emsList' id="{{ems.emsNo}}">-->
+                            <!--<td>{{ems.emsNo}}</td>-->
+                            <!--<td>{{ems.orderRef}}</td>-->
+                            <!--<td>{{ems.fpMachineID}}</td>-->
+                            <!--<td>{{ems.totalFP}}</td>-->
+                            <!--<td style="min-width: 222px">-->
+                            <!--{{showFpRanges($index)}}-->
+                            <!--</td>-->
+                            <!--<td ng-if="ems.ps =='printing'" class="printing">打印中</td>-->
+                            <!--<td ng-if="ems.ps =='pendding'" class="pendding">队列中</td>-->
+                            <!--<td ng-if="ems.ps ==''">未打印</td>-->
+                            <!--<td ng-if="ems.ps =='done'" class="printing"><i class="material-icons">done</i></td>-->
+                            <!--</tr>-->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div style='clear: both;'></div>
+            </div>
+
+            <div class="mdl-cell mdl-cell--4-col" style="margin-top: 0">
+
+                <!-- 查询区域 -->
+                <div class="mdl-cell mdl-cell--12-col mdl-shadow--2dp">
+                    <div class="mdl-cell mdl-cell--12-col text-center" style="height: 48px;">
+                        <div class="mdl-textfield mdl-js-textfield">
+                            <input class="mdl-textfield__input" type="text" ng-model="queryEMS"/>
+                            <label class="mdl-textfield__label">请输入EMS单号进行查询</label>
+                        </div>
+                        <label class="mdl-button mdl-js-button mdl-button--icon">
+                            <i class="material-icons" ng-click="searchEMS()">search</i>
+                        </label>
+
+                    </div>
+                    <div style="height: 5px;" ng-if="!detail">&nbsp;</div>
+                    <div id="ems_detail" ng-if="detail">
+                        <div class="mdl-cell mdl-cell--12-col mdl-grid">
+                            <div class="mdl-cell mdl-cell--3-col">EMS单号:</div>
+                            <div class="mdl-cell mdl-cell--9-col">{{detail.emsNo}}</div>
+                            <div class="mdl-cell mdl-cell--3-col">收件人:</div>
+                            <div class="mdl-cell mdl-cell--9-col">{{detail.fpDelivContact}}</div>
+                            <div class="mdl-cell mdl-cell--3-col">电话:</div>
+                            <div class="mdl-cell mdl-cell--9-col">{{detail.fpDelivContactPhone}}</div>
+                            <div class="mdl-cell mdl-cell--3-col">地址:</div>
+                            <div class="mdl-cell mdl-cell--9-col">
+                                {{detail.fpDelivRegion}}{{detail.fpDelivCity}}{{detail.fpDelivDistrict}}
+                            </div>
+                            <div class="mdl-cell mdl-cell--3-col" ng-if="detail.fpDelivAddr"></div>
+                            <div class="mdl-cell mdl-cell--9-col" ng-if="detail.fpDelivAddr">
+                                {{detail.fpDelivAddr}}
+                            </div>
+
+                            <div class="mdl-cell mdl-cell--3-col" ng-if="detail.fpDelivComp"></div>
+                            <div class="mdl-cell mdl-cell--9-col" ng-if="detail.fpDelivComp">
+                                {{detail.fpDelivComp}}
+                            </div>
+
+                            <div class="mdl-cell mdl-cell--3-col">发票张数:</div>
+                            <div class="mdl-cell mdl-cell--9-col">{{detail.totalFP}}张</div>
+                            <div class="mdl-cell mdl-cell--3-col">发票号段:</div>
+                            <div class="mdl-cell mdl-cell--9-col" id="detail_ranges">
+                                {{showDetailFpRanges(detail.fpRanges)}}
+                            </div>
+                            <div class="mdl-cell mdl-cell--3-col" ng-if="detail.fpPrintDate">打印日期:</div>
+                            <div class="mdl-cell mdl-cell--9-col" ng-if="detail.fpPrintDate">{{detail.fpPrintDate}}
+                            </div>
+                        </div>
+
+                        <div class="mdl-card__actions mdl-card--border mdl-grid">
+                            <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">在打印列表中定位</a>
+                            <div class="mdl-layout-spacer"></div>
+                            <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">立即打印</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- 多张显示区域 -->
+
+
+                <!--<div class="mdl-cell mdl-cell&#45;&#45;12-col mdl-shadow&#45;&#45;2dp">-->
+                <!--<div class="mdl-cell mdl-cell&#45;&#45;12-col text-center">-->
+                <!--<h4 style="padding-top: 25px">[多张]发票号段显示区域</h4>-->
+                <!--</div>-->
+                <!--<div style="height: 300px; overflow-y: scroll">-->
+                <!--<div class="mdl-cell mdl-cell&#45;&#45;12-col demo-card-event mdl-card"-->
+                <!--style="border-top: 1px solid rgba(0, 0, 0, .12);">-->
+                <!--<div class="mdl-card__title mdl-card&#45;&#45;expand">-->
+                <!--<span><span style="font-size: 24px">1011574246622</span><br>10983745-345&nbsp;&nbsp;&nbsp;&nbsp;10983745-345<br>10983745-345&nbsp;&nbsp;&nbsp;&nbsp;10983745-345<br>10983745-345&nbsp;&nbsp;&nbsp;&nbsp;10983745-345<br>10983745-345&nbsp;&nbsp;&nbsp;&nbsp;10983745-345<br>10983745-345&nbsp;&nbsp;&nbsp;&nbsp;10983745-345</span>-->
+
+
+                <!--</div>-->
+                <!--<div class="mdl-card__actions" style="height: 53px">-->
+                <!--<button style="float:right;"-->
+                <!--class="mdl-list__item-secondary-action mdl-button mdl-button&#45;&#45;raised mdl-js-button mdl-js-ripple-effect"-->
+                <!--href="#">Done!-->
+                <!--</button>-->
+                <!--</div>-->
+                <!--</div>-->
+                <!--<div class="mdl-cell mdl-cell&#45;&#45;12-col demo-card-event mdl-card"-->
+                <!--style="border-top: 1px solid rgba(0, 0, 0, .12);">-->
+                <!--<div class="mdl-card__title mdl-card&#45;&#45;expand">-->
+                <!--<span><span style="font-size: 24px">1011574246622</span><br>10983745-345&nbsp;&nbsp;&nbsp;&nbsp;10983745-345<br>10983745-345&nbsp;&nbsp;&nbsp;&nbsp;10983745-345<br>10983745-345&nbsp;&nbsp;&nbsp;&nbsp;10983745-345<br>10983745-345&nbsp;&nbsp;&nbsp;&nbsp;10983745-345<br>10983745-345&nbsp;&nbsp;&nbsp;&nbsp;10983745-345</span>-->
+
+
+                <!--</div>-->
+                <!--<div class="mdl-card__actions" style="height: 53px">-->
+                <!--<button style="float:right;"-->
+                <!--class="mdl-list__item-secondary-action mdl-button mdl-button&#45;&#45;raised mdl-js-button mdl-js-ripple-effect"-->
+                <!--href="#">Done!-->
+                <!--</button>-->
+                <!--</div>-->
+                <!--</div>-->
+                <!--</div>-->
+                <!--</div>-->
+
+
+            </div>
+        </div>
+    </main>
+</div>
+
+
+<script src="./bower_components/material-design-lite/material.min.js"></script>
+<script src="./bower_components/jquery/dist/jquery.min.js"></script>
+<script src="./bower_components/angular/angular.min.js"></script>
+<script src="./bower_components/restangular/dist/restangular.min.js"></script>
+<script src="./bower_components/dialog-polyfill/dialog-polyfill.js"></script>
+<script src="./bower_components/lodash/lodash.js"></script>
+<script src="./bower_components/ng-resource/dist/ng-resource.min.js"></script>
+<script src="./bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js"></script>
+<script src="./bower_components/angular-bindonce/bindonce.min.js"></script>
+<script src="./bower_components/jquery.scrollTo/jquery.scrollTo.min.js"></script>
+
+<script src="./app/components/login/login.js"></script>
+<script src="./app/components/print/print.js"></script>
+<script src="./app/app.module.js"></script>
+<script src="./app/shared/application.js"></script>
+<script src="./app/shared/session.js"></script>
+<script src="./app/shared/services/data.js"></script>
+<script src="./app/shared/services/loading.js"></script>
+<script src="./app/shared/services/dialog.js"></script>
+
+</body>
+</html>

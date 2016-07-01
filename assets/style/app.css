@@ -1,0 +1,76 @@
+.mdl-data-table th, .mdl-data-table td {
+    text-align: center;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.printing {
+    color: green;
+}
+
+.pendding {
+    color: orangered;
+}
+
+/*#ems_detail div {*/
+/*font-size: 16px;*/
+
+/*}*/
+
+.mdl-data-table tr {
+    border-top: 0px solid rgba(0, 0, 0, .12);
+    border-bottom: 1px solid rgba(0, 0, 0, .12);
+}
+
+#ems_detail .mdl-grid .mdl-cell {
+    margin-top: 2px;
+    margin-bottom: 2px;
+    word-wrap: break-word;
+}
+
+.mdl-card--expand {
+    padding: 8px;
+}
+
+.operation-button-color {
+    color: #fff;
+    background-color: #f46c0e;
+}
+
+.operation-button-color:hover {
+    background-color: #f46c0e;
+}
+
+.operation-button-color:active {
+    background-color: #f46c0e;
+}
+
+.operation-button-color:focus:not(:active) {
+    background-color: #f46c0e;
+}
+
+.operation-button-color .mdl-ripple {
+    background: rgb(255, 255, 255);
+}
+
+/*#header .mdl-textfield__label:after {*/
+/*background-color: #fff;*/
+/*}*/
+
+#header .mdl-textfield__input {
+    border: none;
+    border-bottom: 1px solid #fff;
+}
+
+#table_body tr {
+    cursor: pointer;
+    min-height: 56px;
+    height: 56px;
+}
+
+tr img {
+    width: 200px;
+    height: 200px;
+}
